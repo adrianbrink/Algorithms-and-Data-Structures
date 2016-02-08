@@ -1,7 +1,7 @@
 import edu.princeton.cs.algs4.*; 
 
 public class UFW {
-    public static void main(String[] args) {
+        public static void main(String[] args) {
         int N = StdIn.readInt();
         WeightedQuickUnionUF uf = new WeightedQuickUnionUF(N);
         while (!StdIn.isEmpty()) {
