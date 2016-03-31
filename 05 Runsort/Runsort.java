@@ -35,8 +35,8 @@ public class Runsort {
         outerloop:
         while(true)
         {
-	        StdOut.println("new round");
-	        show(a);
+	        //StdOut.println("new round");
+	        //show(a);
 
 	        int i = 0;
 	      
