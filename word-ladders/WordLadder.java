@@ -1,12 +1,17 @@
 import edu.princeton.cs.algs4.*;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Arrays;
 import java.util.LinkedList;
+
+
 
 class WordLadder {
 
 	public static void main (String[] args)
 	{
+
+		// create graph
 		
 		String[] a = StdIn.readAllStrings();
 
@@ -29,18 +34,59 @@ class WordLadder {
 			}
 		}
 
-		StdOut.println(map.get("ehrt"));
-
-
-
+		String fromWord = args[0];
+		String toWord = args[1];
 		
-		// take input
+		// run breadth first search
+		bff(fromWord, toWord, map);
+	}
 
-		// create hashmap
+	private static void bff(String fromWord, String toWord, HashMap<String, LinkedList<String>> map)
+	{
+		Map<String, Boolean> marked = new HashMap<String, Boolean>();
+		Map<String, String> edgeTo = new HashMap<String, String>();
+		
+		Queue<String> queue = new Queue<String>();
+		queue.enqueue(fromWord);
+		
+		while(!queue.isEmpty()) {
 
-		// for every word in file, insert in hashmap: use all sorted 4-combinations as keys and add word as value
+			String word = queue.dequeue();
+			String lastFour = word.substring(1,5);
 
-		// do BFS	
+			// sort last 4 characters
+			char[] lastFourArray = lastFour.toCharArray();
+			Arrays.sort(lastFourArray);
+
+			for(String child: map.get(new String(lastFourArray)))
+			{
+				if(marked.get(child) == null)
+		    	{
+		    		edgeTo.put(child, word);
+		    		marked.put(child, true);
+		    		queue.enqueue(child);
+		    	}
+			}		    
+		}
+
+		StdOut.println(pathTo(toWord, fromWord, marked, edgeTo));
+	}
+
+	private static Boolean hasPathTo(String word, Map marked)
+	{
+		return marked.get(word) == null ? false : true;
+	}
+
+	private static Iterable<String> pathTo(String word, String source, Map marked, Map<String, String> edgeTo)
+	{
+		if(! hasPathTo(word, marked)) return null;
+		Stack<String> path = new Stack<String>();
+		for (String x = word; x != source; x = edgeTo.get(x))
+		{
+			path.push(x);
+		}
+		path.push(source);
+		return path;
 	}
 
 	private static String[] permutations(int n, String s)
