@@ -10,11 +10,19 @@ class WordLadder {
 
 	public static void main (String[] args)
 	{
-
-		// create graph
-		
 		String[] a = StdIn.readAllStrings();
 
+		HashMap<String, LinkedList<String>> map = createGraph(a);
+
+		String fromWord = args[0];
+		String toWord = args[1];
+		
+		// run breadth first search
+		bfs(fromWord, toWord, map);
+	}
+
+	private static HashMap<String, LinkedList<String>> createGraph(String[] a)
+	{
 		HashMap<String, LinkedList<String>> map = new HashMap<String, LinkedList<String>>();
 
 		for(String str: a)
@@ -34,14 +42,10 @@ class WordLadder {
 			}
 		}
 
-		String fromWord = args[0];
-		String toWord = args[1];
-		
-		// run breadth first search
-		bff(fromWord, toWord, map);
+		return map;
 	}
 
-	private static void bff(String fromWord, String toWord, HashMap<String, LinkedList<String>> map)
+	private static void bfs(String fromWord, String toWord, HashMap<String, LinkedList<String>> map)
 	{
 		Map<String, Boolean> marked = new HashMap<String, Boolean>();
 		Map<String, String> edgeTo = new HashMap<String, String>();
