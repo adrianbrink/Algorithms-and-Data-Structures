@@ -25,6 +25,7 @@ public class FancyRunsort {
     }
 
     // Sort the input a[] between the index number lo & hi using the insertion sort method.
+    // Source: http://algs4.cs.princeton.edu/21elementary/Insertion.java.html
     private static void insertSort(Comparable[] a, int lo, int hi) {
         int N = a.length;
         for (int i = lo; i <= hi; i++) {
@@ -39,8 +40,7 @@ public class FancyRunsort {
      * Rearranges the array in ascending order, using the natural order.
      * @param a the array to be sorted
      */
-    public static void sort(Comparable[] a) {
-        int N = a.length;
+    public static void sort(Comparable[] a, int N) {
         Comparable[] aux = new Comparable[N];
 
         outerloop:
@@ -119,10 +119,16 @@ public class FancyRunsort {
 
 	public static void main(String[] args)
 	{
-		String[] a = StdIn.readAllStrings();
-		sort(a);
-		StdOut.println("Is sorted: " + isSorted(a));
-		show(a);
+        String[] a = StdIn.readAllStrings();
+        int N = a.length;
+        if (N > 1) {
+            sort(a, N);
+            StdOut.println("Is sorted: " + isSorted(a));
+            show(a);
+        } else {
+            StdOut.println("Nothing to sort");
+            show(a);
+        }
 	}
 
 }

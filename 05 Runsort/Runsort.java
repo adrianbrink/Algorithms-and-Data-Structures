@@ -28,8 +28,7 @@ public class Runsort {
      * Rearranges the array in ascending order, using the natural order.
      * @param a the array to be sorted
      */
-    public static void sort(Comparable[] a) {
-        int N = a.length;
+    public static void sort(Comparable[] a, int N) {
         Comparable[] aux = new Comparable[N];
 
         outerloop:
@@ -91,9 +90,14 @@ public class Runsort {
 	public static void main(String[] args)
 	{
 		String[] a = StdIn.readAllStrings();
-		sort(a);
-		StdOut.println("Is sorted: " + isSorted(a));
-		show(a);
+        int N = a.length;
+        if (N > 1) {
+            sort(a, N);
+            StdOut.println("Is sorted: " + isSorted(a));
+            show(a);
+        } else {
+            StdOut.println("Nothing to sort");
+            show(a);
+        }
 	}
-
 }
