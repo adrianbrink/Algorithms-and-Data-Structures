@@ -8,16 +8,15 @@ public class CongressAsger {
         //Create a string of array for each line in the file.
 		String[] lines = new In(args[0]).readAll().split("\\n");
 
-		int totalStates = Integer.parseInt(lines[0]);
-		int seats = Integer.parseInt(lines[1]);
+		int totalStates = lines[0];
+		int seats = lines[1];
 
-		PriorityQueue<StateAsger> priority = new PriorityQueue<StateAsger>();
+		PriorityQueue<State> priority = new PriorityQueue<State>();
 
 		//Create the number of states
 		for (int i = 2 ; i < lines.length; i++) {
 			//Start from line 3;
-			priority.add(new StateAsger(lines[i], Integer.parseInt(lines[i+1])));
-            i++;
+			priority.add(new State(lines[i], lines[i+1]));
 		}
 
 		//All states get atleast one seat
@@ -25,15 +24,50 @@ public class CongressAsger {
 
 		//Organize the remaining seats
         for (int i = seats ; i > 0 ; i--) {
-			StateAsger current = priority.poll();
+			State current = priority.poll();
 			current.increaseSeat();
 			seats--;
             priority.add(current);
 		}
 
 		for (int i = priority.size() ; i > 0 ; i--) {
-			StateAsger current = priority.poll();
+			State current = priority.poll();
 			StdOut.println(current.getName()+" "+current.getSeat());
 		}
 	}
+
+    public class State {
+        String name;
+        int population;
+        int seat = 1;
+        
+        public State(String name, int population) {
+            name = this.name;
+            population = this.population;
+        }
+        
+        public String getName() {
+            return name;
+        }
+        
+        public int getPopulation() {
+            return population;
+        }
+        
+        public int getSeat() {
+            return seat;
+        }
+        
+        public int getPriority() {
+            return (int) (population / (Math.sqrt(seat * (seat + 1))));
+        }
+        
+        public void increaseSeat() {
+            seat++;
+        }
+        
+        public int compare(State state) {
+            return (int) Math.round(state.getPriority() - this.getPriority());
+        }
+    }
 }

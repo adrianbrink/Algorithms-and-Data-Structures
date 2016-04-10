@@ -1,0 +1,6 @@
+[submodule "algdes-labs"]
+	path = algdes-labs
+	url = https://github.com/thorehusfeldt/algdes-labs.git
+[submodule "bads-labs"]
+	path = bads-labs
+	url = https://github.com/thorehusfeldt/bads-labs.git
