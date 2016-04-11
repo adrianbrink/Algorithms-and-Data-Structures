@@ -94,10 +94,10 @@ public class Runsort {
         if (N > 1) {
             sort(a, N);
             StdOut.println("Is sorted: " + isSorted(a));
-            show(a);
+            //show(a);
         } else {
             StdOut.println("Nothing to sort");
-            show(a);
+            //show(a);
         }
 	}
 }

@@ -27,7 +27,7 @@ public class FancyRunsort {
     // Sort the input a[] between the index number lo & hi using the insertion sort method.
     // Source: http://algs4.cs.princeton.edu/21elementary/Insertion.java.html
     private static void insertSort(Comparable[] a, int lo, int hi) {
-        int N = a.length;
+ 
         for (int i = lo; i <= hi; i++) {
             for (int j = i; j > 0 && less(a[j], a[j-1]); j--) {
                 exch(a, j, j-1);
@@ -60,17 +60,33 @@ public class FancyRunsort {
 	        	if(lo == 0 && m == N-1) break outerloop; 
 	        	if(m == N-1) continue; // skip to next round if there's no second run to merge with
 
+                // elongate run if it is shorter than 8 elements.
+                if (m-lo < 8 && m+8 < N)
+                {
+                    //Insertion.sort(a, m, m+8); //insertSort runs
+                    insertSort(a, m, m+8);
+                    m+=8;
+                    i+=8;
+                }
+
 	        	// find second run
 	        	i++;
 	        	while(i<N-1 && !less(a[i+1],a[i])) i++;
 	        	int hi = i;
 
+                // elongate run if it is shorter than 8 elements.
+                if(hi-m < 8 && hi+64 < N)
+                {
+                    //Insertion.sort(a, hi, hi+8); //insertSort runs
+                    insertSort(a, hi, hi+8);
+                    hi+=8;
+                    i+=8;
+                }
+
 	        	//Select sort method: Insertion or runsort
-	        	if (hi-lo <= 8) {
-	        		insertSort(a, lo, hi); //insertSort runs
-	        	} else {
-	        		merge(a, aux, lo, m, hi); // merge runs
-	        	}
+	        	
+	        	merge(a, aux, lo, m, hi); // merge runs
+	        	
 	        	// if there was only two runs before merging
 	        	// there will now be one and the array will be sorted
 				if(lo == 0 && hi == N-1) break outerloop; 
@@ -124,10 +140,10 @@ public class FancyRunsort {
         if (N > 1) {
             sort(a, N);
             StdOut.println("Is sorted: " + isSorted(a));
-            show(a);
+            //show(a);
         } else {
             StdOut.println("Nothing to sort");
-            show(a);
+            //show(a);
         }
 	}
 
