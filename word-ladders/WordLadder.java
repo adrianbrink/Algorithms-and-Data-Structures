@@ -3,22 +3,37 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Arrays;
 import java.util.LinkedList;
-
+import java.io.File;
 
 
 class WordLadder {
 
 	public static void main (String[] args)
 	{
-		String[] a = StdIn.readAllStrings();
+		// create graph
 
+		File graphfile = new File("data/words-" + args[0] + ".txt");
+
+		In graphInput = new In(graphfile);
+
+		String[] a = graphInput.readAllStrings();
+	
 		HashMap<String, LinkedList<String>> map = createGraph(a);
 
-		String fromWord = args[0];
-		String toWord = args[1];
-		
-		// run breadth first search
-		bfs(fromWord, toWord, map);
+
+		// run input
+
+		File inputFile = new File("data/words-" + args[0] + "-in.txt");
+
+		In input = new In(inputFile);
+
+		String[] b = input.readAllStrings();
+
+		for(int i = 0; i < b.length; i+=2)
+		{
+			// run breadth first search
+			StdOut.println(bfs(b[i], b[i+1], map));
+		}
 	}
 
 	private static HashMap<String, LinkedList<String>> createGraph(String[] a)
@@ -45,8 +60,10 @@ class WordLadder {
 		return map;
 	}
 
-	private static void bfs(String fromWord, String toWord, HashMap<String, LinkedList<String>> map)
+	private static int bfs(String fromWord, String toWord, HashMap<String, LinkedList<String>> map)
 	{
+		if(fromWord.equals(toWord)) return 0;
+
 		Map<String, Boolean> marked = new HashMap<String, Boolean>();
 		Map<String, String> edgeTo = new HashMap<String, String>();
 		
@@ -73,7 +90,7 @@ class WordLadder {
 			}		    
 		}
 
-		StdOut.println(pathTo(toWord, fromWord, marked, edgeTo));
+		return lengthOfPath(toWord, fromWord, marked, edgeTo);
 	}
 
 	private static Boolean hasPathTo(String word, Map marked)
@@ -81,7 +98,14 @@ class WordLadder {
 		return marked.get(word) == null ? false : true;
 	}
 
-	private static Iterable<String> pathTo(String word, String source, Map marked, Map<String, String> edgeTo)
+	private static int lengthOfPath(String word, String source, Map marked, Map<String, String> edgeTo)
+	{
+		Stack<String> path = pathTo(word, source, marked, edgeTo);
+		if (path == null) return -1;
+		else return path.size() -1;
+	}
+
+	private static Stack<String> pathTo(String word, String source, Map marked, Map<String, String> edgeTo)
 	{
 		if(! hasPathTo(word, marked)) return null;
 		Stack<String> path = new Stack<String>();
