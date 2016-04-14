@@ -3,50 +3,71 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.io.File;
+
 
 class WordLadder {
-	public static void main (String[] args) {
-		//Read the file stucture and Construct the map (words-#.txt)
-		String[] a = StdIn.readAllStrings();
+
+	public static void main (String[] args)
+	{
+		// create graph
+
+		File graphfile = new File("data/words-" + args[0] + ".txt");
+
+		In graphInput = new In(graphfile);
+
+		String[] a = graphInput.readAllStrings();
+	
 		HashMap<String, LinkedList<String>> map = createGraph(a);
 
-		//Terminal input:
-		//java WordLadder "words-#-in.txt" < "words-#.txt
-		String[] v = new In(args[0]).readAll().split("\\s"); //String fromWord = args[0]; && String toWord = args[1]; 
-				
-		// (v. length() / 2 ) is the total # runs
-		for (int i = 0 ; i < v.length ; i += 2) {
-			String fromWord = v[i];
-			String toWord = v[i+1];
 
-			// if fromWord is equal to toWord, then we are done: 
-			if (fromWord.equals(toWord)) StdOut.println("0"); 					//Gives only the path count
-			//if (fromWord.equals(toWord)) StdOut.println("0 : " +fromWord); 	//Gives the path results aswell
-			else bfs(fromWord, toWord, map);
-		}	
+		// run input
+
+		File inputFile = new File("data/words-" + args[0] + "-in.txt");
+
+		In input = new In(inputFile);
+
+		String[] b = input.readAllStrings();
+
+		for(int i = 0; i < b.length; i+=2)
+		{
+			// run breadth first search
+			StdOut.println(bfs(b[i], b[i+1], map));
+		}
 	}
 
-	private static HashMap<String, LinkedList<String>> createGraph(String[] a){
+	private static HashMap<String, LinkedList<String>> createGraph(String[] a)
+	{
 		HashMap<String, LinkedList<String>> map = new HashMap<String, LinkedList<String>>();
-		for(String str: a){
+
+		for(String str: a)
+		{
 			String[] permutations = permutations(4,str);
-			for(String permutation: permutations){
+
+			for(String permutation: permutations)
+			{
 				LinkedList<String> entry = map.get(permutation);
+		
 			    if (entry == null) {
 			        entry = new LinkedList<String> ();
 			        map.put(permutation, entry);
 			    }
+
 			    entry.add(str);
 			}
 		}
+
 		return map;
 	}
 
-	private static void bfs(String fromWord, String toWord, HashMap<String, LinkedList<String>> map) {
+	private static int bfs(String fromWord, String toWord, HashMap<String, LinkedList<String>> map)
+	{
+		if(fromWord.equals(toWord)) return 0;
+
 		Map<String, Boolean> marked = new HashMap<String, Boolean>();
 		Map<String, String> edgeTo = new HashMap<String, String>();
+		
 		Queue<String> queue = new Queue<String>();
-		Stack<String> path = new Stack<String>();
 		queue.enqueue(fromWord);
 		
 		while(!queue.isEmpty()) {
@@ -58,47 +79,63 @@ class WordLadder {
 			char[] lastFourArray = lastFour.toCharArray();
 			Arrays.sort(lastFourArray);
 
-			for(String child: map.get(new String(lastFourArray))){
-				if(marked.get(child) == null) {
+			for(String child: map.get(new String(lastFourArray)))
+			{
+				if(marked.get(child) == null)
+		    	{
 		    		edgeTo.put(child, word);
 		    		marked.put(child, true);
 		    		queue.enqueue(child);
 		    	}
 			}		    
 		}
-		path = pathTo(toWord, fromWord, marked, edgeTo);
-		if (path == null) StdOut.println("-1");						//Gives only the path count
-	 	else StdOut.println(path.size() - 1);						//Gives only the path count
-		//if (path == null) StdOut.println("-1: " +path);			//Gives the path results aswell
-	 	//else StdOut.println((path.size() - 1) +" : " +path);		//Gives the path results aswell
+
+		return lengthOfPath(toWord, fromWord, marked, edgeTo);
 	}
 
-	private static Boolean hasPathTo(String word, Map marked) {
+	private static Boolean hasPathTo(String word, Map marked)
+	{
 		return marked.get(word) == null ? false : true;
 	}
 
-	private static Stack<String> pathTo(String word, String source, Map marked, Map<String, String> edgeTo) {
-		if(!hasPathTo(word, marked)) return null;
+	private static int lengthOfPath(String word, String source, Map marked, Map<String, String> edgeTo)
+	{
+		Stack<String> path = pathTo(word, source, marked, edgeTo);
+		if (path == null) return -1;
+		else return path.size() -1;
+	}
+
+	private static Stack<String> pathTo(String word, String source, Map marked, Map<String, String> edgeTo)
+	{
+		if(! hasPathTo(word, marked)) return null;
 		Stack<String> path = new Stack<String>();
-		
-		for (String x = word; x != source; x = edgeTo.get(x)) {
+		for (String x = word; x != source; x = edgeTo.get(x))
+		{
 			path.push(x);
 		}
-		path.push(source);	
+		path.push(source);
 		return path;
 	}
 
-	private static String[] permutations(int n, String s) {
+	private static String[] permutations(int n, String s)
+	{
 		String[] permutations = new String[5];
 		
-		for(int i = 0; i <= n; i++) {
+		for(int i = 0; i <= n; i++)
+		{
 			char[] chars = new char[4];
-			for(int j=0; j<4;j++) {
+		
+			for(int j=0; j<4;j++)
+			{
 				chars[j] = s.charAt((i+j)%5);			
 			}	
+
 			Arrays.sort(chars);
+
 			permutations[i] = new String(chars);
 		}
+
 		return permutations;
 	}
+
 }
