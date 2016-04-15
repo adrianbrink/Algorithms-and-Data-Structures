@@ -41,10 +41,10 @@ public class FancyRunsort {
      * @param a the array to be sorted
      */
     public static void sort(Comparable[] a) {
+        int N = a.length;
         Comparable[] aux = new Comparable[N];
         
-        int N = a.length;
-        if (N > 1) {
+        if (N < 1) {
             return;
         } else {
         
@@ -86,9 +86,7 @@ public class FancyRunsort {
                         hi+=8;
                         i+=8;
                     }
-
-                    //Select sort method: Insertion or runsort
-	        	
+                    
                     merge(a, aux, lo, m, hi); // merge runs
 	        	
                     // if there was only two runs before merging
