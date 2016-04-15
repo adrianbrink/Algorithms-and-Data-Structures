@@ -46,7 +46,7 @@ public class FancyRunsort {
         int N = a.length;
         if (N > 1) {
             return;
-        else {
+        } else {
         
             outerloop:
             while(true) {
