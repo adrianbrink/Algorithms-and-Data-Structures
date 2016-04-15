@@ -44,7 +44,7 @@ public class FancyRunsort {
         int N = a.length;
         Comparable[] aux = new Comparable[N];
         
-        if (N < 1) {
+        if (N <= 1) {
             return;
         } else {
         
