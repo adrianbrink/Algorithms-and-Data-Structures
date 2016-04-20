@@ -40,59 +40,62 @@ public class FancyRunsort {
      * Rearranges the array in ascending order, using the natural order.
      * @param a the array to be sorted
      */
-    public static void sort(Comparable[] a, int N) {
+    public static void sort(Comparable[] a) {
+        int N = a.length;
         Comparable[] aux = new Comparable[N];
+        
+        if (N <= 1) {
+            return;
+        } else {
+        
+            outerloop:
+            while(true) {
+                //StdOut.println("new round");
+                //show(a);
 
-        outerloop:
-        while(true)
-        {
-	        //StdOut.println("new round");
-	        //show(a);
-
-	        int i = 0;
+                int i = 0;
 	      
-	        while(i<N-1) {
+                while(i<N-1) {
 	        	
-	        	// find first run
-	            int lo = i;
-	        	while(i<N-1 && ! less(a[i+1],a[i])) i++; 
-	        	int m = i;
-	        	if(lo == 0 && m == N-1) break outerloop; 
-	        	if(m == N-1) continue; // skip to next round if there's no second run to merge with
+                    // find first run
+                    int lo = i;
+                    while(i<N-1 && ! less(a[i+1],a[i])) i++;
+                    int m = i;
+                    if(lo == 0 && m == N-1) break outerloop;
+                    if(m == N-1) continue; // skip to next round if there's no second run to merge with
 
-                // elongate run if it is shorter than 8 elements.
-                if (m-lo < 8 && m+8 < N)
-                {
-                    //Insertion.sort(a, m, m+8); //insertSort runs
-                    insertSort(a, m, m+8);
-                    m+=8;
-                    i+=8;
+                    // elongate run if it is shorter than 8 elements.
+                    if (m-lo < 8 && m+8 < N)
+                    {
+                        //Insertion.sort(a, m, m+8); //insertSort runs
+                        insertSort(a, m, m+8);
+                        m+=8;
+                        i+=8;
+                    }
+                
+                    // find second run
+                    i++;
+                    while(i<N-1 && !less(a[i+1],a[i])) i++;
+                    int hi = i;
+
+                    // elongate run if it is shorter than 8 elements.
+                    if(hi-m < 8 && hi+64 < N)
+                    {
+                        //Insertion.sort(a, hi, hi+8); //insertSort runs
+                        insertSort(a, hi, hi+8);
+                        hi+=8;
+                        i+=8;
+                    }
+                    
+                    merge(a, aux, lo, m, hi); // merge runs
+	        	
+                    // if there was only two runs before merging
+                    // there will now be one and the array will be sorted
+                    if(lo == 0 && hi == N-1) break outerloop;
+
+                    i++;
                 }
-
-	        	// find second run
-	        	i++;
-	        	while(i<N-1 && !less(a[i+1],a[i])) i++;
-	        	int hi = i;
-
-                // elongate run if it is shorter than 8 elements.
-                if(hi-m < 8 && hi+64 < N)
-                {
-                    //Insertion.sort(a, hi, hi+8); //insertSort runs
-                    insertSort(a, hi, hi+8);
-                    hi+=8;
-                    i+=8;
-                }
-
-	        	//Select sort method: Insertion or runsort
-	        	
-	        	merge(a, aux, lo, m, hi); // merge runs
-	        	
-	        	// if there was only two runs before merging
-	        	// there will now be one and the array will be sorted
-				if(lo == 0 && hi == N-1) break outerloop; 
-
-				i++;
-	        }
+            }
         }
     }
 
@@ -133,18 +136,10 @@ public class FancyRunsort {
         a[j] = swap;
     }
 
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) {
         String[] a = StdIn.readAllStrings();
-        int N = a.length;
-        if (N > 1) {
-            sort(a, N);
-            StdOut.println("Is sorted: " + isSorted(a));
-            //show(a);
-        } else {
-            StdOut.println("Nothing to sort");
-            //show(a);
-        }
+        sort(a);
+        StdOut.println("Is sorted: " + isSorted(a));
 	}
 
 }
