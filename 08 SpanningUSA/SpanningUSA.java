@@ -4,12 +4,19 @@ import java.util.Comparator;
 import java.util.Random;
 
 public class SpanningUSA {
-	
-	private static final int cities = 128;
 
 	public static void main(String[] args) {
 		String[] lines = new In(args[0]).readAll().split("\\n");
 		Hashtable map = new Hashtable();
+		
+		int count = 0;
+		for(int i = 0 ; i < lines.length ; i++) {
+			if (lines[i].contains("--")) break;
+			count++; 
+		}
+		int cities = count;
+		//StdOut.println(cities);
+
 		EdgeWeightedGraph g = new EdgeWeightedGraph(cities); //Source: http://algs4.cs.princeton.edu/43mst/EdgeWeightedGraph.java.html
 
 		/*
@@ -23,7 +30,7 @@ public class SpanningUSA {
 		/*
 		 * 	Collect all edges between cities
 		 */
-		for (int i = 128; i < lines.length; i++) {
+		for (int i = cities; i < lines.length; i++) {
 				
 			//Total:	 		"San Diego"--"Saint Joseph" [1652]
 			//first split:  [0] "San Diego"  	[1]	"Saint Joseph" [1652]
