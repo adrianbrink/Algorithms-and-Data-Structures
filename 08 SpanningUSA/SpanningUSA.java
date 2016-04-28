@@ -47,6 +47,8 @@ public class SpanningUSA {
 		}
 
 		prims(g, cities);
+		PrimMST p = new PrimMST(g);
+		StdOut.println(p.weight());
 		
 	}
 
@@ -98,8 +100,15 @@ public class SpanningUSA {
 			mst.enqueue(edge);
 			treeSize ++;
 		}
-
 	
-		StdOut.println(mst.toString());
+
+		//StdOut.println(mst.toString());
+		Double sum = 0.0;
+		for (Edge e : mst) {
+        	sum += e.weight();
+        // do something with e
+		}
+
+		StdOut.println(sum);
 	}
 }
