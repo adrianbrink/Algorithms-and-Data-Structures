@@ -30,7 +30,6 @@ public class GorillaHash {
      */
     private static double dist(int[] a) {
         double aLength = 0;
-        
         for (int i = 0 ; i < a.length ; i++) aLength = aLength + Math.pow(a[i], 2);
         return Math.sqrt(aLength);
     }
@@ -90,21 +89,22 @@ public class GorillaHash {
             Arrays.fill(dnaLine, "");
         
         // Fill the ArrayStrings with data (uses numberOfSpecies to keep track)
-        numberOfSpecies = 0;
+        numberOfSpecies = -1;
         for(int i = 0 ; i < lines.length ; i++) {
             if (lines[i].contains(">")) {
+                numberOfSpecies++; //skip first iteration
                 species[numberOfSpecies] = lines[i].replace(">", "").trim().replaceAll("\\d+.*", "");
-                if (i != 0) numberOfSpecies++; //skip first iteration
             } else  dnaLine[numberOfSpecies] = dnaLine[numberOfSpecies] + lines[i];
         }
-        
-        //Create profiles in an two dimentional array.... *!"& this (Do the Pong Dance)
+        numberOfSpecies++;
+
+        //Create profiles in an two dimentional array
         int [][] profile = new int[numberOfSpecies][d];
         for(int i = 0 ; i < numberOfSpecies ; i++) profile[i] = profile(dnaLine[i], k, d);
 
         // Print top-bar with species (names)
         System.out.printf("%15s", "");
-        for (int i = 0; i < species.length; i++) {
+        for (int i = 0; i < (species.length); i++) {
             System.out.printf("%15s", species[i]);
         }
         
@@ -119,13 +119,37 @@ public class GorillaHash {
             }
             System.out.println();
         }
+
+        similarTest();
+        distTest();
     }
     
-    /*
-     UNIT-testing:
-     Similar method
-     dist method
-     */
+    public static void similarTest() {
+        int[] p1 = new int[]{1,2,3};
+        int[] p2 = new int[]{3,2,1};
+        int[] p3 = new int[]{4,5,6};
+
+        StdOut.println("Testresults for similar method:");
+        StdOut.println(similar(p1, p1));    // == 1.0
+        StdOut.println(similar(p1, p2));    // != 1.0
+        StdOut.println(similar(p1, p3));    // != 1.0
+        StdOut.println(similar(p2, p1));    // != 1.0
+        StdOut.println(similar(p2, p2));    // == 1.0
+        StdOut.println(similar(p2, p3));    // != 1.0
+        StdOut.println(similar(p3, p1));    // != 1.0
+        StdOut.println(similar(p3, p2));    // != 1.0
+        StdOut.println(similar(p3, p3));    // == 1.0
+    }
+    public static void distTest() {
+        int[] p1 = new int[]{1,2}; // 1 = a and 2 = b   formular= a^2 + b^2 = c^2
+        int[] p2 = new int[]{2,1};
+        int[] p3 = new int[]{3,4};
+
+        StdOut.println("Testresults for dist method:");
+        StdOut.println(dist(p1));
+        StdOut.println(dist(p2));
+        StdOut.println(dist(p3));
+    }
     
     /*
      Time Conmplexity:
