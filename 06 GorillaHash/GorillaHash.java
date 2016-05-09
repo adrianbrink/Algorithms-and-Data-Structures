@@ -36,7 +36,7 @@ public class GorillaHash {
     }
 
     /*
-     *  Returns the hashed profile 
+     *  Returns the hashed profile of the gram-sequence
      */ 
     private static int[] profile(String s, int gramLength, int profileLength) {
         //Setup profile size, set by profilLength
@@ -46,6 +46,7 @@ public class GorillaHash {
         String[] gram = grams(gramLength, s);
 
         //Hash the remainder of profileLength of gram to the profile
+        //Source: https://en.wikipedia.org/wiki/Java_hashCode%28%29 ".hashCode()"
         for (int i = 0; i < gram.length ; i++) {
             int hash = Math.abs(gram[i].hashCode()) % profileLength;
             profile[hash] = profile[hash] +1;
@@ -53,9 +54,15 @@ public class GorillaHash {
         return profile;
     } 
 
+    /*
+     *  Returns all the different gram-sequenses (k-value) constructed from the dnaString (s-value) in a string of arrays
+     *  Description: dnaString.length = 20 && k = 20 then gram will only contain 1 result;
+     */
     private static String[] grams(int gramLength, String s) {
-
-        String[] gram = new String[s.length()-gramLength]; 
+        //Check for duplicates (improvement of code use : Set)
+        //Set<String> set = new HashSet<>();
+        
+        String[] gram = new String[s.length()-gramLength];
         for (int i = 0; i < gram.length; i++) {
             int end = i + gramLength;
             gram[i] = s.substring(i, end);
@@ -65,15 +72,13 @@ public class GorillaHash {
 
 
 	public static void main(String[] args) {
-
-        
         //The gram length - Initial value k = 20 
         int k = 20;
 
         //The profil length used in a reminder calc. in Method: "profile" - Initial value d = 10000
         int d = 10000;
 
-        //Create a string of array for each line in the file.   
+        //Create a string of array for each line in the file.  
         String[] lines = new In(args[0]).readAll().split("\\n");
 
         int numberOfSpecies = 0;
@@ -81,38 +86,31 @@ public class GorillaHash {
         
         String[] species = new String[numberOfSpecies];
         String[] dnaLine = new String[numberOfSpecies];
-            //Because DNA from the input is appended
+            //Because of DNA from the input is appended
             Arrays.fill(dnaLine, "");
         
         // Fill the ArrayStrings with data (uses numberOfSpecies to keep track)
-        numberOfSpecies = -1;
+        numberOfSpecies = 0;
         for(int i = 0 ; i < lines.length ; i++) {
             if (lines[i].contains(">")) {
-                numberOfSpecies++;
                 species[numberOfSpecies] = lines[i].replace(">", "").trim().replaceAll("\\d+.*", "");
+                if (i != 0) numberOfSpecies++; //skip first iteration
             } else  dnaLine[numberOfSpecies] = dnaLine[numberOfSpecies] + lines[i];
         }
         
-        //Create profiles in an two dimentional array.... Fuck this shit!!! (Do the Pong Dance)
+        //Create profiles in an two dimentional array.... *!"& this (Do the Pong Dance)
         int [][] profile = new int[numberOfSpecies][d];
-        
         for(int i = 0 ; i < numberOfSpecies ; i++) profile[i] = profile(dnaLine[i], k, d);
-        
-        //Output - printstatement:
-            for(int i = 0; i < dnaLine.length; i++) {
-                StdOut.println(i+species[i]);
-                StdOut.println(i+dnaLine[i]);
-            }
-            
-        //print the overview-top-bar with species (names)
+
+        // Print top-bar with species (names)
         System.out.printf("%15s", "");
         for (int i = 0; i < species.length; i++) {
             System.out.printf("%15s", species[i]);
         }
-        //Next line
+        
         StdOut.println("");
         
-        //print names first in the row (i) and profiles compared (j)
+        // Print names first in the row (i) and profiles compared (j)
         for (int i = 0; i < profile.length; i++) {
             System.out.printf("%15s", species[i]);
             for (int j = 0; j < profile.length; j++) {
@@ -121,11 +119,25 @@ public class GorillaHash {
             }
             System.out.println();
         }
-        
-        //Sea-Cucumber - print
-        System.out.printf("%15s", species[11]);
-        System.out.printf("%15f", similar(profile[11], profile[0]));
-        StdOut.println("");
-        StdOut.println(profile.length);
     }
+    
+    /*
+     UNIT-testing:
+     Similar method
+     dist method
+     */
+    
+    /*
+     Time Conmplexity:
+     1. Read lines in file (loop)
+     2. Read #species in file (loop)
+     3. Create profile (loop)
+     3.1 Compute grams (loop)
+     3.2 Hash values (loop)
+     4. PrintArray species & dnaLine
+     5. PrintTwoDimentionalArray Headline
+     6. PrintTwoDimentionalArray Contens
+     
+     Conclusion: Worst Case is O(n^2)
+     */
 }
