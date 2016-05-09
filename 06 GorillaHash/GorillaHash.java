@@ -35,7 +35,7 @@ public class GorillaHash {
     }
 
     /*
-     *  Returns the hashed profile of the gram-sequence
+     *  Returns the hashed profile
      */ 
     private static int[] profile(String s, int gramLength, int profileLength) {
         //Setup profile size, set by profilLength
