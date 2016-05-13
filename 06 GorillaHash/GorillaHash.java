@@ -35,7 +35,7 @@ public class GorillaHash {
     }
 
     /*
-     *  Returns the hashed profile of the gram-sequence
+     *  Returns the hashed profile
      */ 
     private static int[] profile(String s, int gramLength, int profileLength) {
         //Setup profile size, set by profilLength
@@ -127,18 +127,22 @@ public class GorillaHash {
     public static void similarTest() {
         int[] p1 = new int[]{1,2,3};
         int[] p2 = new int[]{3,2,1};
-        int[] p3 = new int[]{4,5,6};
+        
+        int[] p3 = new int[10000];
+        int[] p4 = new int[10000];
+        for (int i = 0 ; i < 10000 ; i++) {
+                p3[i] = (int) (Math.random() + 1.5); // 1 or 2
+                p4[i] = (int) (Math.random() + 1.5); // 1 or 2
+        }
+
 
         StdOut.println("Testresults for similar method:");
         StdOut.println(similar(p1, p1));    // == 1.0
-        StdOut.println(similar(p1, p2));    // != 1.0
-        StdOut.println(similar(p1, p3));    // != 1.0
-        StdOut.println(similar(p2, p1));    // != 1.0
+        StdOut.println(similar(p1, p2));    // != 1.0 "should be the same number as similar(p2 , p1)"
         StdOut.println(similar(p2, p2));    // == 1.0
-        StdOut.println(similar(p2, p3));    // != 1.0
-        StdOut.println(similar(p3, p1));    // != 1.0
-        StdOut.println(similar(p3, p2));    // != 1.0
+        StdOut.println(similar(p2, p1));    // != 1.0 "should be the same number as similar(p1 , p2)"
         StdOut.println(similar(p3, p3));    // == 1.0
+        StdOut.println(similar(p3, p4));    // != 1.0
     }
     public static void distTest() {
         int[] p1 = new int[]{1,2}; // 1 = a and 2 = b   formular= a^2 + b^2 = c^2
@@ -146,22 +150,8 @@ public class GorillaHash {
         int[] p3 = new int[]{3,4};
 
         StdOut.println("Testresults for dist method:");
-        StdOut.println(dist(p1));
-        StdOut.println(dist(p2));
-        StdOut.println(dist(p3));
+        StdOut.println(dist(p1));   // result: 2.236
+        StdOut.println(dist(p2));   // result: 2.236
+        StdOut.println(dist(p3));   // result: 5.0
     }
-    
-    /*
-     Time Conmplexity:
-     1. Read lines in file (loop)
-     2. Read #species in file (loop)
-     3. Create profile (loop)
-     3.1 Compute grams (loop)
-     3.2 Hash values (loop)
-     4. PrintArray species & dnaLine
-     5. PrintTwoDimentionalArray Headline
-     6. PrintTwoDimentionalArray Contens
-     
-     Conclusion: Worst Case is O(n^2)
-     */
 }
